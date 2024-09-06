@@ -21,9 +21,9 @@ public class TabCompletions implements TabCompleter {
 
         if (args.length == 1) {
             if (args[0].isEmpty()) {
-                completions.addAll(Arrays.asList("reload", "disable", "enable"));
+                completions.addAll(Arrays.asList("reload", "disable", "enable", "update"));
             } else {
-                for (String subcmd : Arrays.asList("reload", "disable", "enable")) {
+                for (String subcmd : Arrays.asList("reload", "disable", "enable", "update")) {
                     if (subcmd.startsWith(args[0].toLowerCase())) {
                         completions.add(subcmd);
                     }
