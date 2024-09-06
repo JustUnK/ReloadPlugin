@@ -30,40 +30,35 @@ public class Main implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            Utilities.Message((Player) sender,"&cThis command can only be used by other players.");
+            Utilities.Message((Player) sender, "&cThis command can only be used by players.");
             return true;
         }
 
-
-        String subcmd = args[0].toLowerCase();
-        String pluginName = args[1];
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        Plugin target = pluginManager.getPlugin(pluginName);
-
-        if (args.length >= 1) {
+        if (args.length < 1) {
             Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
             return true;
         }
 
-        if (target == null) {
-            Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
-            return true;
-        }
+        String subcmd = args[0].toLowerCase();
+        PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if (target.equals(plugin)) {
-            Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fcannot be modified.");
-            return true;
-        }
+        // Commands that require a plugin name
+        if (args.length == 2) {
+            String pluginName = args[1];
+            Plugin target = pluginManager.getPlugin(pluginName);
 
-        try {
+            if (target == null) {
+                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
+                return true;
+            }
+
+            if (target.equals(plugin)) {
+                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fcannot be modified.");
+                return true;
+            }
+
             switch (subcmd) {
                 case "reload":
-
-                    if (args.length != 2) {
-                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
-                        return true;
-                    }
-
                     File pluginDir = new File("plugins");
                     File pluginFile = null;
 
@@ -82,51 +77,42 @@ public class Main implements CommandExecutor {
                         return true;
                     }
 
-                    if (target != null) {
-                        pluginManager.disablePlugin(target);
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas disabled because the latter was null.");
-                        return true;
-                    }
-
                     try {
-                        target = pluginManager.loadPlugin(pluginFile);
-                        pluginManager.enablePlugin(target);
-
+                        pluginManager.disablePlugin(target);
+                        pluginManager.enablePlugin(pluginManager.loadPlugin(pluginFile));
                         Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas reloaded.");
-                    } catch(InvalidPluginException e) {
+                    } catch (InvalidPluginException e) {
                         Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not reloaded. Please check the console");
                         e.printStackTrace();
+                    } catch (InvalidDescriptionException e) {
+                        throw new RuntimeException(e);
                     }
                     break;
 
                 case "disable":
-                    if (args.length != 2) {
-                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
-                        return true;
-                    }
-
                     if (!target.isEnabled()) {
                         Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already disabled");
-                        return false;
+                        return true;
                     }
                     pluginManager.disablePlugin(target);
                     Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas disabled successfully.");
                     break;
 
                 case "enable":
-                    if (args.length != 2) {
-                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
-                        return true;
-                    }
-
                     if (target.isEnabled()) {
                         Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already enabled.");
-                        return false;
+                        return true;
                     }
                     pluginManager.enablePlugin(target);
                     Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas enabled successfully.");
                     break;
 
+                default:
+                    Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+                    return false;
+            }
+        } else if (args.length == 1) {
+            switch (subcmd) {
                 case "update":
                     String currentVersion = plugin.getDescription().getVersion();
                     String latestVersion = getLatestVersion();
@@ -148,13 +134,14 @@ public class Main implements CommandExecutor {
                     Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
                     return false;
             }
-        } catch (Exception e) {
-            Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7Failed to process &f&n" + pluginName + "&7. Please check the console");
-            e.printStackTrace();
+        } else {
+            Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+            return false;
         }
 
         return true;
     }
+
     private String getLatestVersion() {
         try {
             URL url = new URL(REPO_URL);
