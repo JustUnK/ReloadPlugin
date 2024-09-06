@@ -5,16 +5,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.justunk.reloadPlugin.functions.Utilities;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.json.JSONObject;
+import java.io.File;
 
 @SuppressWarnings("All")
 public class Main implements CommandExecutor {
@@ -33,50 +34,97 @@ public class Main implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 2) {
-            Utilities.Message((Player) sender,"&cUsage: /reloadplugin <reload|disable|enable|update> <plugin_name>");
-            return true;
-        }
 
         String subcmd = args[0].toLowerCase();
         String pluginName = args[1];
         PluginManager pluginManager = Bukkit.getPluginManager();
         Plugin target = pluginManager.getPlugin(pluginName);
 
+        if (args.length >= 1) {
+            Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+            return true;
+        }
+
         if (target == null) {
-            Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7Plugin &f&n" + pluginName + "&7 was not found.");
+            Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
             return true;
         }
 
         if (target.equals(plugin)) {
-            Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7You cannot reload or modify this plugin.");
+            Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fcannot be modified.");
             return true;
         }
 
         try {
             switch (subcmd) {
                 case "reload":
-                    pluginManager.disablePlugin(target);
-                    pluginManager.enablePlugin(target);
-                    Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7Reloaded &f&n" + pluginName + "&7 successfully.");
+
+                    if (args.length != 2) {
+                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+                        return true;
+                    }
+
+                    File pluginDir = new File("plugins");
+                    File pluginFile = null;
+
+                    for (File file : pluginDir.listFiles()) {
+                        if (file.getName().endsWith(".jar")) {
+                            PluginDescriptionFile desc = pluginManager.getPlugin(pluginName).getDescription();
+                            if (desc.getName().equalsIgnoreCase(pluginName)) {
+                                pluginFile = file;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (pluginFile == null) {
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
+                        return true;
+                    }
+
+                    if (target != null) {
+                        pluginManager.disablePlugin(target);
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas disabled because the latter was null.");
+                        return true;
+                    }
+
+                    try {
+                        target = pluginManager.loadPlugin(pluginFile);
+                        pluginManager.enablePlugin(target);
+
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas reloaded.");
+                    } catch(InvalidPluginException e) {
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not reloaded. Please check the console");
+                        e.printStackTrace();
+                    }
                     break;
 
                 case "disable":
+                    if (args.length != 2) {
+                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+                        return true;
+                    }
+
                     if (!target.isEnabled()) {
-                        Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7This plugin is already disabled.");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already disabled");
                         return false;
                     }
                     pluginManager.disablePlugin(target);
-                    Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7Disabled &f&n" + pluginName + "&7 successfully.");
+                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas disabled successfully.");
                     break;
 
                 case "enable":
+                    if (args.length != 2) {
+                        Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+                        return true;
+                    }
+
                     if (target.isEnabled()) {
-                        Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7This plugin is already enabled.");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already enabled.");
                         return false;
                     }
                     pluginManager.enablePlugin(target);
-                    Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7Enabled &f&n" + pluginName + "&7 successfully.");
+                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas enabled successfully.");
                     break;
 
                 case "update":
@@ -97,7 +145,7 @@ public class Main implements CommandExecutor {
                     break;
 
                 default:
-                    Utilities.Message((Player) sender,"&cUsage: /reloadplugin <reload|disable|enable> <plugin_name>");
+                    Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
                     return false;
             }
         } catch (Exception e) {
