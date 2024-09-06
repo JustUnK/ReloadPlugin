@@ -35,7 +35,7 @@ public class Main implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &fto use ReloadPlugin.");
+            Utilities.ActionBar((Player) sender, "Usage &a&n/rp <update|enable|disable|reload> &f to use ReloadPlugin.");
             return true;
         }
 
@@ -48,12 +48,12 @@ public class Main implements CommandExecutor {
             Plugin target = pluginManager.getPlugin(pluginName);
 
             if (target == null) {
-                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
+                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was not found");
                 return true;
             }
 
             if (target.equals(plugin)) {
-                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fcannot be modified.");
+                Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f cannot be modified.");
                 return true;
             }
 
@@ -73,7 +73,7 @@ public class Main implements CommandExecutor {
                     }
 
                     if (pluginFile == null) {
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not found");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was not found");
                         return true;
                     }
 
@@ -92,20 +92,20 @@ public class Main implements CommandExecutor {
 
                 case "disable":
                     if (!target.isEnabled()) {
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already disabled");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f is already disabled");
                         return true;
                     }
                     pluginManager.disablePlugin(target);
-                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas disabled successfully.");
+                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was disabled successfully.");
                     break;
 
                 case "enable":
                     if (target.isEnabled()) {
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fis already enabled.");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f is already enabled.");
                         return true;
                     }
                     pluginManager.enablePlugin(target);
-                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas enabled successfully.");
+                    Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was enabled successfully.");
                     break;
 
                 default:
