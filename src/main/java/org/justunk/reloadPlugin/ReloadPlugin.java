@@ -6,12 +6,21 @@ public final class ReloadPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+
+        Log("Loaded successfully");
+
 
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+
+        Log("Good bye!");
+
     }
+
+    public void Log(String message) {
+        getLogger().info("[ReloadPlugin] " + message);
+    }
+
 }
