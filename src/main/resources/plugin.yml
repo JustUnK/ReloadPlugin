@@ -1,5 +1,5 @@
 name: ReloadPlugin
-version: '1.4'
+version: '1.8.2'
 main: org.justunk.reloadPlugin.ReloadPlugin
 api-version: '1.21'
 commands:
