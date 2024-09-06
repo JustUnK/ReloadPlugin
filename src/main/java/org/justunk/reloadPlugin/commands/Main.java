@@ -10,12 +10,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.justunk.reloadPlugin.functions.Utilities;
 
+
 @SuppressWarnings("All")
-public class ReloadPlugin implements CommandExecutor {
+public class Main implements CommandExecutor {
 
     private final JavaPlugin plugin;
 
-    public ReloadPlugin(JavaPlugin plugin) {
+    public Main(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
