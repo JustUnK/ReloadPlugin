@@ -8,3 +8,5 @@ commands:
     usage: /reloadplugin <reload|disable|enable> <plugin>
     aliases:
       - rp
+    permission: reloadplugin.access
+    permission-message: §cYou don't have permission to execute this command!
