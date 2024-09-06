@@ -14,7 +14,7 @@ public final class ReloadPlugin extends JavaPlugin {
     public void onEnable() {
 
 
-        Objects.requireNonNull(getCommand("reloadplugin")).setExecutor(new ReloadPlugin());
+        Objects.requireNonNull(getCommand("reloadplugin")).setExecutor(new Main(this));
 
         Objects.requireNonNull(getCommand("reloadplugin")).setTabCompleter(new TabCompletions());
         Log("Loaded successfully");
