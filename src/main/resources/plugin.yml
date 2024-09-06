@@ -2,3 +2,9 @@ name: ReloadPlugin
 version: '1.0'
 main: org.justunk.reloadPlugin.ReloadPlugin
 api-version: '1.21'
+commands:
+  reloadplugin:
+    description: Reload a plugin, or disable or enable it
+    usage: /reloadplugin <reload|disable|enable> <plugin>
+    aliases:
+      - rp
