@@ -89,7 +89,8 @@ public class Main implements CommandExecutor {
                     }
 
                     if (isUpdateAvailable(currentVersion, latestVersion)) {
-                        Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7A new version is available: &f&n" + latestVersion + "&7. Please update your plugin.");
+                        Utilities.Message((Player) sender, "&c&lReloadPlugin &7| &7A new version is available: &f&n" + latestVersion + "&7. I'm still on &f&n" + currentVersion);
+                        Utilities.Message((Player) sender, "&7Download at &f&nhttps://github.com/JustUnK/ReloadPlugin/releases");
                     } else {
                         Utilities.Message((Player) sender, "&a&lReloadPlugin &7| &7You are running the latest version: &f&n" + currentVersion + "&7.");
                     }
