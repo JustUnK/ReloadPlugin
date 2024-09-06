@@ -79,10 +79,11 @@ public class Main implements CommandExecutor {
 
                     try {
                         pluginManager.disablePlugin(target);
-                        pluginManager.enablePlugin(pluginManager.loadPlugin(pluginFile));
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas reloaded.");
+                        pluginManager.loadPlugin(pluginFile);
+                        pluginManager.enablePlugin(target);
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was reloaded.");
                     } catch (InvalidPluginException e) {
-                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&fwas not reloaded. Please check the console");
+                        Utilities.ActionBar((Player) sender, "Plugin &a&n" + pluginName + "&f was not reloaded. Please check the console");
                         e.printStackTrace();
                     } catch (InvalidDescriptionException e) {
                         throw new RuntimeException(e);
